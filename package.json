@@ -1,7 +1,7 @@
 {
   "name": "my-app",
   "version": "0.1.0",
-  "homepage": "https://stas9909.github.io/react-test-job/",
+  "homepage": "https://stas9909.github.io/Simple-todo-list-react/",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
