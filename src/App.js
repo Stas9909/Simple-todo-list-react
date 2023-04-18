@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css';
@@ -15,16 +15,17 @@ function App() {
 
   //temp state 
   const [newTask, setNewTask] = useState('');
+  const newTaskMemo = useMemo(() => newTask, [newTask]);
 
   const [updateData, setUpdateData] = useState('');
 
   //add task 
   const addTask = () => {
-    if (newTask) {
+    if (newTaskMemo) {
       let newEntryObj = {
-        id: toDo.length > 0 ? Math.max(...toDo.map(task => task.id)) + 1 : 1,
+        id: toDo.length > 0 ? Math.max(...toDo.map(task => task.id)) + 1 : 1, 
         // id: uuidv4(),//генерируем уникальный id
-        title: newTask,
+        title: newTaskMemo,
         status: false,
       }
       setToDo([...toDo, newEntryObj]);
@@ -33,23 +34,21 @@ function App() {
   }
 
   //delete task 
-  const deleteTask = (id) => {
+  const deleteTask = (id) => {//id мы получаем из компонента TaskList
     let newTasks = toDo.filter(task => task.id !== id);
-    // const index = toDo.findIndex(task => task.id === id);
-    // const newTasks = [...toDo.slice(0, index), ...toDo.slice(index + 1)];
     setToDo(newTasks);
   }
 
   //mark task as done 
-  const markDone = (id) => {
+  const markDone = useCallback((id) => {
     let newTask = toDo.map(task => {
       if (task.id === id) {
-        return ({ ...task, status: !task.status })
+        return ({ ...task, status: !task.status })//меняем статус на противоположный
       }
       return task;
     })
     setToDo(newTask);
-  }
+  }, [toDo])
 
   //cancel update
   const cancelUpdate = () => {
@@ -93,7 +92,7 @@ function App() {
       ) : (
         <>
           <AddTaskList
-            newTask={newTask}
+            newTask={newTaskMemo}
             setNewTask={setNewTask}
             addTask={addTask}
           />
